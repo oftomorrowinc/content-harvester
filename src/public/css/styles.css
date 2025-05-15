@@ -66,49 +66,43 @@ body {
 
 .section-title {
   font-size: 1.4rem;
-  margin-bottom: 20px;
   color: var(--text-primary);
+  margin: 0;
+}
+
+/* Collection Header */
+.collection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 /* URL Input */
 .url-input-container {
   display: flex;
-  margin-bottom: 20px;
   position: relative;
 }
 
 #url-form {
   display: flex;
-  width: 100%;
+  width: auto;
 }
 
 #url-input {
-  flex: 1;
+  width: 300px;
   background-color: var(--bg-tertiary);
   border: 1px solid var(--border-color);
   border-radius: 4px 0 0 4px;
   color: var(--text-primary);
-  padding: 12px;
+  padding: 10px 12px;
   font-size: 0.95rem;
-  min-height: 48px;
-  resize: vertical;
-  position: relative;
+  height: 40px;
 }
 
 #url-input:focus {
   outline: none;
   border-color: var(--accent-color);
-}
-
-.url-input-container::after {
-  content: 'Paste URLs to auto-submit';
-  position: absolute;
-  bottom: 8px;
-  right: 125px; /* Position it away from the button */
-  font-size: 0.8rem;
-  color: var(--text-secondary);
-  opacity: 0.7;
-  pointer-events: none;
 }
 
 #add-urls-btn {
@@ -121,10 +115,40 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
+  height: 40px;
 }
 
 #add-urls-btn:hover {
   background-color: var(--accent-hover);
+}
+
+/* HTMX loading indicator */
+.htmx-indicator {
+  display: none;
+  margin-left: 8px;
+}
+
+.htmx-request .htmx-indicator {
+  display: inline-block;
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  animation: spin 1s linear infinite;
+}
+
+.spinner circle {
+  stroke: rgba(255, 255, 255, 0.5);
+}
+
+.spinner path {
+  stroke: white;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Content Table */
@@ -133,12 +157,26 @@ body {
   border-radius: 4px;
   overflow: hidden;
   margin-bottom: 20px;
+  
+  /* Set a fixed height with dynamic calculation */
+  height: calc(100vh - 250px);
+  min-height: 300px;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
 }
 
 .content-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.95rem;
+  table-layout: fixed;
+}
+
+.content-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .content-table thead th {
@@ -148,6 +186,51 @@ body {
   font-weight: 600;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-color);
+}
+
+/* Column widths */
+.content-table th:nth-child(1),
+.content-table td:nth-child(1) {
+  width: 35%;
+}
+
+.content-table th:nth-child(2),
+.content-table td:nth-child(2) {
+  width: 10%;
+}
+
+.content-table th:nth-child(3),
+.content-table td:nth-child(3) {
+  width: 10%;
+}
+
+.content-table th:nth-child(4),
+.content-table td:nth-child(4) {
+  width: 15%;
+}
+
+.content-table th:nth-child(5),
+.content-table td:nth-child(5) {
+  width: 15%;
+}
+
+.content-table th:nth-child(6),
+.content-table td:nth-child(6) {
+  width: 15%;
+  text-align: center;
+}
+
+.content-table tbody {
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+}
+
+.content-table thead, .content-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
 .content-table tbody td {
@@ -297,9 +380,10 @@ input:checked + .toggle-slider:before {
 
 /* Empty state */
 .empty-state td {
-  height: 300px;
+  height: 100%;
   vertical-align: middle;
   text-align: center;
+  padding: 50px 0;
 }
 
 .empty-state-content {
@@ -308,6 +392,8 @@ input:checked + .toggle-slider:before {
   align-items: center;
   justify-content: center;
   color: var(--text-secondary);
+  height: 100%;
+  min-height: 200px;
 }
 
 .upload-icon {
@@ -328,11 +414,16 @@ input:checked + .toggle-slider:before {
 }
 
 #content-table-body {
-  min-height: 250px;
-  height: 250px; /* Fixed height to ensure consistency */
+  min-height: 100px;
 }
 
-/* Style for spacer rows to maintain table height */
+/* Make sure empty state has proper height */
+.content-table tbody.dropzone:empty {
+  height: 100%;
+  min-height: 300px;
+}
+
+/* Style for spacer rows to maintain table height when few items */
 .spacer-row td {
   height: 65px; /* Approximately one row height */
   background-color: var(--bg-secondary);

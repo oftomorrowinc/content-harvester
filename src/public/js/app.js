@@ -38,22 +38,44 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error parsing HX-Trigger:', error);
       }
     }
+    
+    // Clear URL input field if the URL form was submitted successfully
+    if (event.detail.elt && event.detail.elt.id === 'url-form' && 
+        event.detail.successful && !event.detail.failed) {
+      const urlInput = document.getElementById('url-input');
+      if (urlInput) {
+        urlInput.value = '';
+      }
+    }
   });
   
-  // Handle URL textarea paste events
-  const urlInput = document.getElementById('url-input');
-  if (urlInput) {
-    urlInput.addEventListener('paste', (e) => {
-      // Wait a moment for the paste to complete
-      setTimeout(() => {
-        // If the form has an HTMX attribute, let it handle the submit
+  // Handle document-level paste events (only when not focused on an input field)
+  document.addEventListener('paste', (e) => {
+    // Skip if we're pasting into an input or textarea
+    if (document.activeElement.tagName === 'INPUT' || 
+        document.activeElement.tagName === 'TEXTAREA' ||
+        document.activeElement.isContentEditable) {
+      return;
+    }
+    
+    // Get the pasted text
+    const pastedText = e.clipboardData.getData('text');
+    
+    // If it contains URLs (starts with http:// or https://)
+    if (pastedText && (pastedText.includes('http://') || pastedText.includes('https://'))) {
+      // Populate the URL input
+      const urlInput = document.getElementById('url-input');
+      if (urlInput) {
+        urlInput.value = pastedText;
+        
+        // Submit the form
         const form = urlInput.closest('form');
         if (form && form.getAttribute('hx-post')) {
           form.dispatchEvent(new Event('submit', { cancelable: true }));
         }
-      }, 100);
-    });
-  }
+      }
+    }
+  });
   
   // Setup drag and drop functionality
   const setupDragAndDrop = () => {
@@ -246,7 +268,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Reinitialize drag and drop after any HTMX content swap
   document.body.addEventListener('htmx:afterSwap', (event) => {
     if (event.detail.target.id === 'content-table-container') {
+      // Set up drag and drop again
       setupDragAndDrop();
+      
+      // Auto-scroll to the bottom of the table when content is updated
+      const tbody = document.getElementById('content-table-body');
+      if (tbody) {
+        tbody.scrollTop = tbody.scrollHeight;
+      }
     }
   });
 });

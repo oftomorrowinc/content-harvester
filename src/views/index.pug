@@ -7,15 +7,22 @@ block content
   
   main.content-harvester
     section.content-collection
-      h2.section-title Content Collection
-      
-      div.url-input-container
-        form#url-form(hx-post="/api/urls" hx-target="#content-table-container" hx-swap="innerHTML")
-          textarea#url-input(
-            name="urls" 
-            placeholder="Paste URLs (e.g., https://example.com, https://another-site.com)"
-          )
-          button#add-urls-btn(type="submit") Add URLs
+      div.collection-header
+        h2.section-title Content Collection
+        
+        div.url-input-container
+          form#url-form(hx-post="/api/urls" hx-target="#content-table-container" hx-swap="innerHTML" hx-indicator="#url-form-indicator")
+            input#url-input(
+              type="text"
+              name="urls" 
+              placeholder="Paste URLs (e.g., https://example.com)"
+            )
+            button#add-urls-btn(type="submit") 
+              span Add URLs
+              span#url-form-indicator.htmx-indicator
+                svg.spinner(viewBox="0 0 24 24")
+                  circle(cx="12" cy="12" r="10" fill="none" stroke-width="2")
+                  path(d="M12 2a10 10 0 0 1 10 10" stroke-width="2")
       
       div#content-table-container
         include partials/content-table

@@ -35,7 +35,8 @@ const createContent = async (data) => {
 const getAllContent = async () => {
   try {
     const db = getDb();
-    const snapshot = await db.collection(COLLECTION).orderBy('createdAt', 'desc').get();
+    // Order by createdAt ascending to put new items at the bottom
+    const snapshot = await db.collection(COLLECTION).orderBy('createdAt', 'asc').get();
     
     return snapshot.docs.map(doc => ({
       id: doc.id,
