@@ -1,6 +1,10 @@
 extends layouts/main
 
 block content
+  - var apiPath = process.env.CONTENT_HARVESTER_API_PATH || "/api"
+  - var urlsEndpoint = apiPath + "/urls"
+  - var processAllEndpoint = apiPath + "/process-all"
+
   header.app-header
     h1.app-title Content Harvester
     p.app-description Collect, categorize, and preprocess multi-source content
@@ -11,7 +15,7 @@ block content
         h2.section-title Content Collection
         
         div.url-input-container
-          form#url-form(hx-post="/api/urls" hx-target="#content-table-container" hx-swap="innerHTML" hx-indicator="#url-form-indicator")
+          form#url-form(hx-post=urlsEndpoint hx-target="#content-table-container" hx-swap="innerHTML" hx-indicator="#url-form-indicator")
             input#url-input(
               type="text"
               name="urls" 
@@ -28,4 +32,4 @@ block content
         include partials/content-table
       
       div.action-container
-        button#process-all-btn(hx-post="/api/process-all" hx-target="#content-table-container" hx-swap="innerHTML") Process All Content
+        button#process-all-btn(hx-post=processAllEndpoint hx-target="#content-table-container" hx-swap="innerHTML") Process All Content

@@ -18,17 +18,19 @@ const initializeApp = () => {
         storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'content-harvester.appspot.com',
       });
 
-      // If running locally, use Firebase emulators
-      if (process.env.NODE_ENV !== 'production') {
+      // If running locally and emulators are enabled, configure them
+      if (process.env.USE_FIREBASE_EMULATORS === 'true') {
         console.log('Using Firebase Emulators');
         const firestore = admin.firestore();
+        const firestoreHost = `${process.env.FIREBASE_EMULATOR_HOST || 'localhost'}:${process.env.FIREBASE_FIRESTORE_EMULATOR_PORT || '8080'}`;
+        
         firestore.settings({
-          host: 'localhost:8080',
+          host: firestoreHost,
           ssl: false,
         });
 
         // Configure Storage emulator
-        process.env.FIREBASE_STORAGE_EMULATOR_HOST = 'localhost:9199';
+        process.env.FIREBASE_STORAGE_EMULATOR_HOST = process.env.FIREBASE_STORAGE_EMULATOR_HOST || 'localhost:9199';
       }
     }
 

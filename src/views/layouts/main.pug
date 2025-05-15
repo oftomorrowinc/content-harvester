@@ -1,5 +1,8 @@
+- var maxFileSize = process.env.CONTENT_HARVESTER_MAX_FILE_SIZE || "50"
+- var apiPath = process.env.CONTENT_HARVESTER_API_PATH || "/api"
+
 doctype html
-html(lang="en")
+html(lang="en", data-max-file-size=maxFileSize, data-api-path=apiPath)
   head
     meta(charset="UTF-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")

@@ -15,7 +15,8 @@
     "emulator": "firebase emulators:start --only firestore,storage",
     "emulator:import": "firebase emulators:start --import=./firebase-emulator-data --only firestore,storage",
     "emulator:export": "firebase emulators:export ./firebase-emulator-data",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "release": "git add . && git commit -m \"Release v$npm_package_version\" && git tag -a v$npm_package_version -m \"Release v$npm_package_version\" && git push && git push --tags"
   },
   "keywords": [
     "content",

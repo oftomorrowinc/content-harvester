@@ -3,8 +3,8 @@ const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
 
-// Collection name
-const COLLECTION = 'contents';
+// Collection name from environment variable or default
+const COLLECTION = process.env.CONTENT_HARVESTER_COLLECTION || 'contents';
 
 // Get Firestore instance
 const getDb = () => getFirestore();
@@ -120,8 +120,11 @@ const uploadFile = async file => {
 
       // Create a mock file URL
       const filename = `${uuidv4()}-${path.basename(file.name)}`;
-      const filePath = `uploads/${filename}`;
-      const mockUrl = `http://localhost:9199/v0/b/content-harvester.appspot.com/o/${encodeURIComponent(filePath)}?alt=media`;
+      const storagePath = process.env.CONTENT_HARVESTER_STORAGE_PATH || 'uploads';
+      const filePath = `${storagePath}/${filename}`;
+      const emulatorHost = process.env.FIREBASE_STORAGE_EMULATOR_HOST || 'localhost:9199';
+      const storageBucket = process.env.FIREBASE_STORAGE_BUCKET || 'content-harvester.appspot.com';
+      const mockUrl = `http://${emulatorHost}/v0/b/${storageBucket}/o/${encodeURIComponent(filePath)}?alt=media`;
 
       return {
         storageRef: filePath,
@@ -135,7 +138,8 @@ const uploadFile = async file => {
     // Production upload to real Firebase Storage
     const bucket = getBucket();
     const filename = `${uuidv4()}-${path.basename(file.name)}`;
-    const filePath = `uploads/${filename}`;
+    const storagePath = process.env.CONTENT_HARVESTER_STORAGE_PATH || 'uploads';
+    const filePath = `${storagePath}/${filename}`;
 
     // Upload the file to Firebase Storage
     await bucket.upload(file.tempFilePath, {

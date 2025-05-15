@@ -216,8 +216,17 @@ document.addEventListener('DOMContentLoaded', () => {
           "raw", "cr2", "nef", "arw", "dng"
         ];
         
-        // Max file size: 50MB
-        const MAX_FILE_SIZE = 50 * 1024 * 1024; 
+        // Max file size from environment variable (in MB) or default to 50MB
+        let maxSizeMB = 50;
+        try {
+          if (document.documentElement.dataset.maxFileSize) {
+            maxSizeMB = parseInt(document.documentElement.dataset.maxFileSize, 10);
+            if (isNaN(maxSizeMB)) maxSizeMB = 50;
+          }
+        } catch (e) {
+          console.error("Error parsing max file size:", e);
+        }
+        const MAX_FILE_SIZE = maxSizeMB * 1024 * 1024;
         
         // Check for unsupported file types and file size
         const validationResults = Array.from(files).map(file => {
@@ -298,8 +307,16 @@ document.addEventListener('DOMContentLoaded', () => {
           formData.append('file', file);
         });
 
-        // Get the upload URL from the data attribute
-        const uploadUrl = dropzone.getAttribute('data-upload-url') || '/api/files';
+        // Get the upload URL from the data attribute or use the default API path
+        let apiPath = '/api';
+        try {
+          if (document.documentElement.dataset.apiPath) {
+            apiPath = document.documentElement.dataset.apiPath;
+          }
+        } catch (e) {
+          console.error("Error getting API path:", e);
+        }
+        const uploadUrl = dropzone.getAttribute('data-upload-url') || (apiPath + '/files');
         console.log('Using upload URL:', uploadUrl);
 
         // Manually trigger XHR request for the file upload

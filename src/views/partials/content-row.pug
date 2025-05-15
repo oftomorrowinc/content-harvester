@@ -1,9 +1,13 @@
+- var apiPath = process.env.CONTENT_HARVESTER_API_PATH || "/api"
+- var anonymizeEndpoint = apiPath + "/content/" + item.id + "/anonymize"
+- var deleteEndpoint = apiPath + "/content/" + item.id
+
 tr.content-row(data-id=item.id)
   td.content-name
     span.name-text #{item.name}
   
   td.content-type
-    span.type-badge(class=`type-${item.type}`) #{item.type}
+    span.type-badge(class="type-"+item.type) #{item.type}
   
   td.content-size
     if item.size
@@ -12,14 +16,14 @@ tr.content-row(data-id=item.id)
       span.size-text -
   
   td.content-status
-    span.status-badge(class=`status-${item.status}`) #{item.status}
+    span.status-badge(class="status-"+item.status) #{item.status}
   
   td.content-anonymize
     label.toggle-switch
       input(
         type="checkbox" 
         checked=item.anonymize 
-        hx-put=`/api/content/${item.id}/anonymize`
+        hx-put=anonymizeEndpoint
         hx-target="closest tr"
         hx-swap="outerHTML"
         name="anonymize"
@@ -29,7 +33,7 @@ tr.content-row(data-id=item.id)
   
   td.content-actions
     button.delete-btn(
-      hx-delete=`/api/content/${item.id}`
+      hx-delete=deleteEndpoint
       hx-target="#content-table-container"
       hx-swap="innerHTML"
       hx-confirm="Are you sure you want to delete this item?"
