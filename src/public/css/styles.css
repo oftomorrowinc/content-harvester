@@ -90,7 +90,7 @@ body {
 }
 
 #url-input {
-  width: 300px;
+  width: 460px;
   background-color: var(--bg-tertiary);
   border: 1px solid var(--border-color);
   border-radius: 4px 0 0 4px;

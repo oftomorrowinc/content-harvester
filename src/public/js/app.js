@@ -206,28 +206,85 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
 
-        // Check for unsupported file types (.zip)
-        const unsupportedFiles = Array.from(files).filter(file =>
-          file.name.toLowerCase().endsWith('.zip')
-        );
+        // List of unsupported file extensions
+        const unsupportedExtensions = [
+          "pptx", "ppt", "xlsx", "xls", "csv", "jpg", "jpeg", "png", "gif", 
+          "webp", "svg", "epub", "zip", "rar", "7z", "tar", "gz", "bz2", 
+          "tgz", "odp", "odt", "ods", "numbers", "pages", "key", "rtf", 
+          "webm", "mkv", "ogg", "ogv", "m4a", "flac", "aac", "heic", 
+          "heif", "avif", "tiff", "tif", "bmp", "psd", "ai", "indd", 
+          "raw", "cr2", "nef", "arw", "dng"
+        ];
+        
+        // Max file size: 50MB
+        const MAX_FILE_SIZE = 50 * 1024 * 1024; 
+        
+        // Check for unsupported file types and file size
+        const validationResults = Array.from(files).map(file => {
+          const fileName = file.name.toLowerCase();
+          const fileExt = fileName.split('.').pop() || '';
+          
+          // Check file type
+          if (unsupportedExtensions.some(ext => fileName.endsWith(`.${ext}`))) {
+            return { 
+              file, 
+              valid: false, 
+              reason: 'type',
+              extension: fileExt
+            };
+          }
+          
+          // Check file size
+          if (file.size > MAX_FILE_SIZE) {
+            return { 
+              file, 
+              valid: false, 
+              reason: 'size',
+              size: file.size
+            };
+          }
+          
+          return { file, valid: true };
+        });
+        
+        const invalidFiles = validationResults.filter(result => !result.valid);
+        
+        if (invalidFiles.length > 0) {
+          // Group by reason
+          const typeErrors = invalidFiles.filter(f => f.reason === 'type');
+          const sizeErrors = invalidFiles.filter(f => f.reason === 'size');
+          
+          let errorMessage = '';
+          
+          // Format type errors
+          if (typeErrors.length > 0) {
+            const extensions = [...new Set(typeErrors.map(f => f.extension))];
+            errorMessage += `Unsupported file type${typeErrors.length > 1 ? 's' : ''}: .${extensions.join(', .')}. `;
+          }
+          
+          // Format size errors
+          if (sizeErrors.length > 0) {
+            const maxSizeFormatted = formatSize(MAX_FILE_SIZE);
+            if (sizeErrors.length === 1) {
+              errorMessage += `File exceeds the ${maxSizeFormatted} size limit. `;
+            } else {
+              errorMessage += `${sizeErrors.length} files exceed the ${maxSizeFormatted} size limit. `;
+            }
+          }
+          
+          createToast(errorMessage, 'error');
 
-        if (unsupportedFiles.length > 0) {
-          createToast(
-            `${unsupportedFiles.length} unsupported file(s) detected. ZIP files are not supported.`,
-            'error'
-          );
-
-          // If all files are unsupported, return early
-          if (unsupportedFiles.length === files.length) {
+          // If all files are invalid, return early
+          if (invalidFiles.length === files.length) {
             return;
           }
         }
 
         // Create FormData and upload supported files
         const formData = new FormData();
-        const supportedFiles = Array.from(files).filter(
-          file => !file.name.toLowerCase().endsWith('.zip')
-        );
+        const supportedFiles = validationResults
+          .filter(result => result.valid)
+          .map(result => result.file);
 
         // Log what we're uploading
         console.log(
@@ -313,8 +370,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Helper function for Pug templates to format file sizes
-window.formatSize = bytes => {
+// Helper function to format file sizes
+const formatSize = bytes => {
   if (bytes === 0) return '0 Bytes';
 
   const k = 1024;
@@ -323,3 +380,6 @@ window.formatSize = bytes => {
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
+
+// Make it available to Pug templates
+window.formatSize = formatSize;
