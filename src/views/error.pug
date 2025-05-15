@@ -1,0 +1,11 @@
+extends layouts/main
+
+block content
+  div.error-container
+    h1.error-title Error
+    if error
+      p.error-message #{error.message || 'An unexpected error occurred'}
+    else
+      p.error-message An unexpected error occurred
+    
+    a.back-link(href="/") Return to home page

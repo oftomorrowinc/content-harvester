@@ -1,0 +1,66 @@
+UI DESIGN MOCKUP DESCRIPTION
+
+This is a description of a UI design mockup for the ContentHarvester's table-like interface:
+
++-----------------------------------------------------------------------+
+|                        Content Collection                             |
++-----------------------------------------------------------------------+
+| Type    | Name                                | Size      | Status    |
++=========================================================================+
+|         |                                     |           |           |
+|         |                                     |           |           |
+|         |     Drag files here or paste URLs   |           |           |
+|         |                                     |           |           |
+|         |                                     |           |           |
++-------------------------------------------------------------------------+
+
+When dragging files over the table body:
+
++-----------------------------------------------------------------------+
+|                        Content Collection                             |
++-----------------------------------------------------------------------+
+| Type    | Name                                | Size      | Status    |
++=========================================================================+
+|         |                                     |           |           |
+|         |                                     |           |           |
+|         |     DROP FILES HERE                 |           |           |
+|         |     Release to add to collection    |           |           |
+|         |                                     |           |           |
++-------------------------------------------------------------------------+
+
+When files are added or URLs are pasted:
+
++-----------------------------------------------------------------------+
+|                        Content Collection                             |
++-----------------------------------------------------------------------+
+| Type    | Name                                | Size      | Status    |
++=========================================================================+
+| PDF     | document.pdf                        | 1.2 MB    | Added     |
+| URL     | https://example.com/article         | -         | Added     |
+| Image   | photo.jpg                           | 350 KB    | Added     |
+| Video   | presentation.mp4                    | 15.6 MB   | Added     |
++-------------------------------------------------------------------------+
+
+When an unsupported file type is dropped, a toast notification appears:
+
++-----------------------------------------------------------------------+
+|                        Content Collection                             |
++-----------------------------------------------------------------------+
+| Type    | Name                                | Size      | Status    |
++=========================================================================+
+| PDF     | document.pdf                        | 1.2 MB    | Added     |
+| URL     | https://example.com/article         | -         | Added     |
+|         |                                     |           |           |
+|         | +-----------------------------------+           |           |
+|         | | ⚠️ Unsupported file type: .zip   |           |           |
+|         | +-----------------------------------+           |           |
++-------------------------------------------------------------------------+
+
+Key design elements:
+- Clean, table-like structure with clear column headers
+- Drop zone overlay exactly matching the table body dimensions
+- In-context toast notifications for errors
+- Simple row format for added content with type, name, size and status
+- Responsive design that works on all screen sizes
+- Visual feedback during drag operations
+- Minimal, focused interface with clear user affordances
