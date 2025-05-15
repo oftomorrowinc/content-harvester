@@ -1,4 +1,4 @@
-const { extractUrls, isValidUrl } = require('../src/utils/url');
+const { extractUrls, isValidUrl } = require('../../src/utils/url');
 
 describe('URL Utils', () => {
   describe('extractUrls', () => {
@@ -23,6 +23,7 @@ describe('URL Utils', () => {
     test('returns empty array for null or empty input', () => {
       expect(extractUrls(null)).toEqual([]);
       expect(extractUrls('')).toEqual([]);
+      expect(extractUrls(undefined)).toEqual([]);
     });
 
     test('only extracts URLs starting with http:// or https://', () => {
@@ -48,6 +49,20 @@ describe('URL Utils', () => {
 
       expect(urls).toEqual(['https://example.com', 'https://another-example.com']);
     });
+
+    test('handles delimiter variations', () => {
+      const text = `https://example1.com, https://example2.com; https://example3.com
+      https://example4.com`;
+
+      const urls = extractUrls(text);
+
+      expect(urls).toEqual([
+        'https://example1.com',
+        'https://example2.com',
+        'https://example3.com',
+        'https://example4.com',
+      ]);
+    });
   });
 
   describe('isValidUrl', () => {
@@ -61,6 +76,7 @@ describe('URL Utils', () => {
     test('rejects invalid URLs', () => {
       expect(isValidUrl(null)).toBe(false);
       expect(isValidUrl('')).toBe(false);
+      expect(isValidUrl(undefined)).toBe(false);
       expect(isValidUrl('example.com')).toBe(false);
       expect(isValidUrl('www.example.com')).toBe(false);
       expect(isValidUrl('ftp://example.com')).toBe(false);

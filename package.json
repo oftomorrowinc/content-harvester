@@ -7,9 +7,15 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src tests",
+    "lint:fix": "eslint --fix src tests",
+    "format": "prettier --write 'src/**/*.js' 'tests/**/*.js'",
     "emulator": "firebase emulators:start --only firestore,storage",
     "emulator:import": "firebase emulators:start --import=./firebase-emulator-data --only firestore,storage",
-    "emulator:export": "firebase emulators:export ./firebase-emulator-data"
+    "emulator:export": "firebase emulators:export ./firebase-emulator-data",
+    "prepare": "husky install"
   },
   "keywords": [
     "content",
@@ -32,8 +38,25 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
+    "babel-jest": "^29.7.0",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-jest": "^27.2.3",
     "firebase-tools": "^12.9.1",
+    "husky": "^8.0.3",
     "jest": "^29.7.0",
-    "nodemon": "^3.0.2"
+    "jest-environment-node": "^29.7.0",
+    "lint-staged": "^13.2.3",
+    "nodemon": "^3.0.2",
+    "prettier": "^3.0.0",
+    "supertest": "^6.3.3"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }

@@ -31,13 +31,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/htmx', express.static(path.join(__dirname, '../node_modules/htmx.org/dist')));
 
 // File upload middleware
-app.use(fileUpload({
-  createParentPath: true,
-  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB max file size
-  abortOnLimit: true,
-  useTempFiles: true,
-  tempFileDir: '/tmp/'
-}));
+app.use(
+  fileUpload({
+    createParentPath: true,
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB max file size
+    abortOnLimit: true,
+    useTempFiles: true,
+    tempFileDir: '/tmp/',
+  })
+);
 
 // Routes
 app.use('/', contentRoutes);

@@ -158,25 +158,34 @@ body {
   overflow: hidden;
   margin-bottom: 20px;
   
-  /* Set a fixed height with dynamic calculation */
+  /* Responsive height calculation that works in all viewports */
   height: calc(100vh - 250px);
   min-height: 300px;
-  max-height: 600px;
+  max-height: 400px;
   display: flex;
   flex-direction: column;
 }
 
 .content-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.95rem;
   table-layout: fixed;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden; /* Prevent any overflow */
 }
 
 .content-table thead {
   position: sticky;
   top: 0;
   z-index: 1;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  background-color: var(--bg-tertiary);
 }
 
 .content-table thead th {
@@ -186,6 +195,7 @@ body {
   font-weight: 600;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-color);
+  position: relative; /* For z-index to work properly */
 }
 
 /* Column widths */
@@ -225,12 +235,40 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) var(--bg-tertiary);
+  width: 100%; /* Ensure full width */
+  min-height: 50px; /* Ensure minimum scrollable area */
+  /* Use margin trick to compensate for scrollbar width */
+  margin-right: -17px; /* Standard scrollbar width */
 }
 
-.content-table thead, .content-table tbody tr {
+/* Ensure proper scrolling behavior when content is present */
+.content-table tbody.has-content {
+  overflow-y: auto !important;
+  display: block !important;
+}
+
+/* Webkit scrollbar styling */
+.content-table tbody::-webkit-scrollbar {
+  width: 8px;
+}
+
+.content-table tbody::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+}
+
+.content-table tbody::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color);
+  border-radius: 6px;
+  border: 2px solid var(--bg-tertiary);
+}
+
+.content-table tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
+  background-color: var(--bg-secondary); /* Ensure consistent background color */
 }
 
 .content-table tbody td {
@@ -379,11 +417,17 @@ input:checked + .toggle-slider:before {
 }
 
 /* Empty state */
+.empty-state {
+  height: 100%;
+  min-height: 200px;
+}
+
 .empty-state td {
   height: 100%;
   vertical-align: middle;
   text-align: center;
   padding: 50px 0;
+  border-bottom: none;
 }
 
 .empty-state-content {
@@ -421,6 +465,9 @@ input:checked + .toggle-slider:before {
 .content-table tbody.dropzone:empty {
   height: 100%;
   min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Style for spacer rows to maintain table height when few items */
@@ -564,11 +611,33 @@ input:checked + .toggle-slider:before {
     padding: 12px;
   }
   
+  /* Hide less important columns on mobile */
   .content-table thead th:nth-child(2),
   .content-table tbody td:nth-child(2),
   .content-table thead th:nth-child(3),
   .content-table tbody td:nth-child(3) {
     display: none;
+  }
+  
+  /* Adjust column widths for mobile view */
+  .content-table th:nth-child(1),
+  .content-table td:nth-child(1) {
+    width: 40%;
+  }
+  
+  .content-table th:nth-child(4),
+  .content-table td:nth-child(4),
+  .content-table th:nth-child(5),
+  .content-table td:nth-child(5),
+  .content-table th:nth-child(6),
+  .content-table td:nth-child(6) {
+    width: 20%;
+  }
+  
+  /* Ensure table wrapper has appropriate height on mobile */
+  .content-table-wrapper {
+    height: calc(100vh - 200px);
+    max-height: 400px;
   }
   
   #process-all-btn {
