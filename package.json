@@ -23,8 +23,7 @@
     "harvester",
     "url",
     "file",
-    "upload",
-    "firebase"
+    "upload"
   ],
   "author": "",
   "license": "MIT",
